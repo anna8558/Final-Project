@@ -1,0 +1,35 @@
+from tkinter import *
+
+class Lcd(Frame):
+    def __init__(self, window):
+        super().__init__(window)
+        # set the background image
+        self.background_image = PhotoImage(file="Your_image.png")
+        self.configure(bg=self.background_image)
+        
+        # make the GUI fullscreen
+        window.after(500, window.attributes, '-fullscreen', 'True')
+        
+        # setup the GUI
+        self.setup()
+        
+    def setup(self):
+        # set column weights
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=2)
+        self.pack(fill=BOTH, expand=True)
+        
+        # the start button
+        self._lstart = Button(self, bg="red", fg="white", font=("Courier New", 24), text="Start")
+        self._lstart.grid(row=5, column=1, sticky=W, padx=25, pady=40)
+        
+        # the title label
+        self._ltitle = Label(self, bg="black", fg="white", font=("Courier New", 24),
+                             text="Project Completed by: Anna, Johny, and Joey")
+        self._ltitle.grid(row=0, column=0, columnspan=2, sticky=W)
+        
+window = Tk()
+lcd = Lcd(window)
+
+window.mainloop()
+
