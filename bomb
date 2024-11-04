@@ -16,6 +16,12 @@ MAX_PASS_LEN = 11
 # does the asterisk (*) clear the passphrase?
 STAR_CLEARS_PASS = True
 
+
+
+
+
+
+
 # the LCD display "GUI"
 class Lcd(Frame):
     def __init__(self, window):
@@ -35,15 +41,7 @@ class Lcd(Frame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=2)
         self.pack(fill=BOTH, expand=True)
-        #
-        
-        
-        
-        
-        
-        
-        
-        the timer
+        #the timer
         self._ltimer = Label(self, bg="black", fg="white", font=("Courier New", 24), text="Time left: ")
         self._ltimer.grid(row=0, column=0, columnspan=2, sticky=W)
         # the keypad passphrase
@@ -58,9 +56,9 @@ class Lcd(Frame):
         # the toggle switches status
         self._ltoggles = Label(self, bg="black", fg="white", font=("Courier New", 24), text="Toggles: ")
         self._ltoggles.grid(row=4, column=0, columnspan=2, sticky=W)
-        # the pause button (pauses the timer)
-        self._lpause = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 24), text="Pause", command=self.pause)
-        self._lpause.grid(row=5, column=0, sticky=W, padx=25, pady=40)
+        # the speed up button (speeds up the timer, if player desires to spice up the game)
+        self._lspeedup = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 24), text=" >>", command=self.pause)
+        self._lspeedup.grid(row=5, column=0, sticky=W, padx=25, pady=40)
         # the quit button
         self._lquit = tkinter.Button(self, bg="red", fg="white", font=("Courier New", 24), text="Quit", command=self.quit)
         self._lquit.grid(row=5, column=1, sticky=W, padx=25, pady=40)
@@ -73,7 +71,7 @@ class Lcd(Frame):
     def setButton(self, button):
         self._button = button
 
-    # pauses the timer
+    # preaches the player about real life rules :)
     def pause(self):
         self._timer.pause()
 
@@ -135,11 +133,17 @@ class Timer(PhaseThread):
                 sleep(0.1)
         self._running = False
 
-    # pauses and unpauses the timer
-    def pause(self):
-        self._paused = not self._paused
+    # prints a message after player's attempt to pause the game
+    def pause():
+        pause_button_presses = 0
+
+        #self._paused = not self._paused
         # blink the 7-segment display when paused
-        self._display.blink_rate = (2 if self._paused else 0)
+        #self._display.blink_rate = (2 if self._paused else 0)
+        print("There is no pause in real life!")
+        
+        pause_button_presses =+ 1
+        
 
     def __str__(self):
         return f"{self._min}:{self._sec}"
