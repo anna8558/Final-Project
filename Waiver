@@ -1,0 +1,45 @@
+import tkinter as tk
+from tkinter import messagebox
+
+# Function to handle the "I Agree" button click
+def on_agree():
+    if agree_var.get():
+        messagebox.showinfo("Agreement", "Thank you for agreeing!")
+    else:
+        messagebox.showwarning("Agreement", "Please check the box to agree.")
+
+# Main window
+root = tk.Tk()
+root.title("Waiver")
+
+# Title label
+title_label = tk.Label(root, text="Waiver (NOT REAL!!!)")
+title_label.pack()
+
+# Waiver text
+waiver_text = """By agreeing to this waiver, you acknowledge and accept full responsibility for defusing 
+the highly volatile, life-threatening, and potentially world-ending bomb described herein. You understand 
+that failure to successfully defuse said bomb could result in catastrophic consequences, including but not 
+limited to: severe injury, loss of limb, existential crises, irreparable property damage, the complete 
+annihilation of your surroundings, and, most notably, your own untimely demise. By clicking 'I agree,' you 
+expressly waive any right to complain, seek legal action, or otherwise hold any individual or organization 
+liable for your ultimate fate. This waiver serves as your binding agreement to willingly attempt to defuse 
+the bomb at your own peril, and you affirm that you are of sound mind (at least right now) and are making 
+this decision without coercion, despite the clear and present danger. Remember, ticking clock sounds 
+are purely optional but very, very real. 
+By clicking "I agree," you accept the terms."""
+text_label = tk.Label(root, text=waiver_text, justify="left", wraplength=300)
+text_label.pack()
+
+# Checkbox for agreement
+agree_var = tk.BooleanVar()
+agree_checkbox = tk.Checkbutton(root, text="I agree", variable=agree_var)
+agree_checkbox.pack()
+
+# "I Agree" button
+agree_button = tk.Button(root, text="Submit", command=on_agree)
+agree_button.pack()
+
+# Run the main loop
+root.mainloop()
+
