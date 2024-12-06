@@ -1,0 +1,47 @@
+def trivia_question(timer):
+    # List of trivia questions with options and correct answers
+    trivia = [
+        {"question": "What is the name of the iconic building on UT's campus known for its Moorish architecture?\n"
+                     "A) Sykes College of Business\nB) Vaughn Center\nC) Henry B. Plant Hall\nD) Macdonald-Kelce Library",
+         "answer": "C"},
+        {"question": "Approximately how many exams and quizzes does the Testing Center administer per semester?\n"
+                     "A) 500\nB) 1,000\nC) 2,500\nD) 5,000",
+         "answer": "C"},
+        {"question": "Which program at UT assists students who are undecided about their major?\n"
+                     "A) Academic Success Center\nB) Major Exploration Program\nC) Career Services\nD) Student Accessibility Services",
+         "answer": "B"},
+        {"question": "What is the name of UT's magazine that connects the university with its alumni, parents, and friends?\n"
+                     "A) Spartan Times\nB) UT Journal\nC) Tampa Today\nD) The Minaret",
+         "answer": "B"},
+        {"question": "Which center at UT offers the 'Learn and Lead Series' focusing on leadership development?\n"
+                     "A) TECO Energy Center for Leadership\nB) Center for Teaching and Learning\nC) Lowth Entrepreneurship Center\nD) Office of Student Leadership",
+         "answer": "A"},
+        {"question": "What is the purpose of the ATI TEAS exam mentioned on UT's website?\n"
+                     "A) To assess students' preparedness entering health science fields\nB) To evaluate English language proficiency\nC) To test mathematical skills for engineering majors\nD) To measure aptitude for business programs",
+         "answer": "A"},
+        {"question": "Where can UT students find resources for academic support, including tutoring and academic coaching?\n"
+                     "A) Office of Student Affairs\nB) Academic Success Center\nC) Career Services\nD) Registrar's Office",
+         "answer": "B"},
+        {"question": "What is the focus of the 'Networking and Informational Interviews' resource provided by UT's Career Services?\n"
+                     "A) Preparing for job interviews\nB) Exploring career fields through conversations with professionals\nC) Developing resumes and cover letters\nD) Learning about graduate school opportunities",
+         "answer": "B"},
+        {"question": "Which office at UT assists students with disabilities in obtaining accommodations?\n"
+                     "A) Health and Wellness Center\nB) Student Accessibility Services\nC) Counseling Center\nD) Office of Diversity and Inclusion",
+         "answer": "B"},
+        {"question": "What is the name of UT's online learning management system?\n"
+                     "A) Blackboard\nB) Moodle\nC) SpartanLearn (powered by Canvas)\nD) Brightspace",
+         "answer": "C"}
+    ]
+
+    # Randomly picks a question
+    q = trivia[randint(0, len(trivia) - 1)]
+    print(f"Trivia Question: {q['question']}")
+    user_answer = input("Your answer: ").strip().upper()
+
+    if user_answer == q['answer']:
+        print("Correct! Confidence boosted.")
+        playsound('success_chime.mp3')  # Success chime
+    else:
+        print("Incorrect! Time deducted.")
+        timer._sec -= 5
+        playsound('explosion.mp3')  # Explosion sound
