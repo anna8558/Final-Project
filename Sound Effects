@@ -1,0 +1,36 @@
+from playsound import playsound
+import threading
+
+class Timer(PhaseThread):
+    def __init__(self, countdown, display):
+        super().__init__()
+        self._sec = countdown
+        self._min = countdown // 60
+        self._display = display
+        self._paused = False
+
+    def run(self):
+        self._running = True
+        while self._sec > 0:
+            if not self._paused:
+                # Update time
+                self._sec -= 1
+                self._min = self._sec // 60
+                self._display.print(f"{self._min:02}:{self._sec % 60:02}")
+
+                # Play ticking sound in a separate thread
+                threading.Thread(target=self._play_ticking_sound, daemon=True).start()
+                
+            sleep(1)
+        self._running = False
+
+    def _play_ticking_sound(self):
+        # Playss the ticking sound
+        playsound('ticking.mp3')
+
+    def pause(self):
+        self._paused = not self._paused
+        print("There is no pause in real life!")  # Optional message that we have decided 
+
+    def __str__(self):
+        return f"{self._min}:{self._sec}"
