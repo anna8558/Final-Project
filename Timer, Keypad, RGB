@@ -1,0 +1,125 @@
+import time
+from threading import Thread
+from digitalio import DigitalInOut, Direction, Pull
+from adafruit_matrixkeypad import Matrix_Keypad
+
+# Timer Class
+class Timer(Thread):
+    def __init__(self, start_time):
+        super().__init__(daemon=True)
+        self.time_left = start_time  # Time in seconds
+        self.running = True
+
+    def run(self):
+        while self.time_left > 0 and self.running:
+            minutes, seconds = divmod(self.time_left, 60)
+            print(f"Timer: {minutes:02}:{seconds:02}")  # Print timer in MM:SS format
+            time.sleep(1)
+            self.time_left -= 1
+        if self.time_left == 0:
+            print("Time's up! BOOM!")
+
+    def stop(self):
+        self.running = False
+
+    def reduce_time(self, seconds):
+        self.time_left = max(0, self.time_left - seconds)
+
+# Keypad Class
+class Keypad(Thread):
+    def __init__(self, rows, cols, keys):
+        super().__init__(daemon=True)
+        self.keypad = Matrix_Keypad(rows, cols, keys)
+        self.current_input = ""
+        self.running = True
+
+    def run(self):
+        while self.running:
+            pressed_keys = self.keypad.pressed_keys
+            if pressed_keys:
+                key = pressed_keys[0]
+                print(f"Key Pressed: {key}")
+                if key == "*":  # Clear input
+                    self.current_input = ""
+                else:
+                    self.current_input += key
+                time.sleep(0.3)  # Debounce delay
+
+    def stop(self):
+        self.running = False
+
+# RGB Button Class
+class RGBButton(Thread):
+    COLORS = ["OFF", "RED", "GREEN", "BLUE"]
+
+    def __init__(self, rgb_pins):
+        super().__init__(daemon=True)
+        self.rgb_pins = rgb_pins
+        for pin in self.rgb_pins:
+            pin.direction = Direction.OUTPUT
+        self.color_index = 0
+        self.running = True
+
+    def run(self):
+        while self.running:
+            self.update_color()
+            time.sleep(1)
+
+    def next_color(self):
+        self.color_index = (self.color_index + 1) % len(self.COLORS)
+
+    def update_color(self):
+        # Set pins based on the current color
+        color = self.COLORS[self.color_index]
+        print(f"RGB Color: {color}")
+        for i, pin in enumerate(self.rgb_pins):
+            pin.value = (i == self.color_index - 1)  # Turn on only the active color
+
+    def stop(self):
+        self.running = False
+        for pin in self.rgb_pins:
+            pin.value = False
+
+# Main Function
+if __name__ == "__main__":
+    # Initialize timer (4 minutes)
+    timer = Timer(240)
+
+    # Initialize keypad (example setup)
+    rows = [DigitalInOut(pin) for pin in (board.D2, board.D3, board.D4, board.D5)]
+    cols = [DigitalInOut(pin) for pin in (board.D6, board.D7, board.D8)]
+    keys = [
+        ["1", "2", "3"],
+        ["4", "5", "6"],
+        ["7", "8", "9"],
+        ["*", "0", "#"]
+    ]
+    keypad = Keypad(rows, cols, keys)
+
+    # Initialize RGB button (example setup)
+    rgb_pins = [DigitalInOut(board.D9), DigitalInOut(board.D10), DigitalInOut(board.D11)]
+    rgb_button = RGBButton(rgb_pins)
+
+    try:
+        # Start threads
+        timer.start()
+        keypad.start()
+        rgb_button.start()
+
+        # Simulate interactions
+        while True:
+            # Example: If keypad receives input "1234", reduce timer by 10 seconds
+            if keypad.current_input == "1234":
+                print("Correct input! Reducing timer by 10 seconds.")
+                timer.reduce_time(10)
+                keypad.current_input = ""
+
+            # Simulate RGB button changing colors every few seconds
+            rgb_button.next_color()
+            time.sleep(5)
+
+    except KeyboardInterrupt:
+        print("Exiting...")
+        timer.stop()
+        keypad.stop()
+        rgb_button.stop()
